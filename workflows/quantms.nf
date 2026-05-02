@@ -14,6 +14,9 @@ include { TMT } from './tmt'
 include { LFQ } from './lfq'
 include { DIA } from './dia'
 
+// Chemprot post-quantification analysis
+include { CHEMPROT } from './chemprot'
+
 // SUBWORKFLOW: Consisting of a mix of local and nf-core/modules
 include { INPUT_CHECK } from '../subworkflows/local/input_check/main'
 include { FILE_PREPARATION } from '../subworkflows/local/file_preparation/main'
@@ -161,6 +164,13 @@ workflow QUANTMS {
         ch_pipeline_results = ch_pipeline_results.mix(DIA.out.diann_report_parquet)
         ch_msstats_in = ch_msstats_in.mix(DIA.out.msstats_in)
         ch_versions = ch_versions.mix(DIA.out.versions)
+    }
+
+    //
+    // WORKFLOW: Optional chemprot post-processing on msstats output
+    //
+    if (params.chemprot_analysis) {
+        CHEMPROT(ch_msstats_in)
     }
 
     // Other subworkflow will return null when performing another subworkflow due to unknown reason.

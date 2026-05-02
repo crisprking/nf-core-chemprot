@@ -169,3 +169,26 @@ You can cite the `nf-core` publication as follows:
 > Philip Ewels, Alexander Peltzer, Sven Fillinger, Harshil Patel, Johannes Alneberg, Andreas Wilm, Maxime Ulysse Garcia, Paolo Di Tommaso & Sven Nahnsen.
 >
 > _Nat Biotechnol._ 2020 Feb 13. doi: [10.1038/s41587-020-0439-x](https://dx.doi.org/10.1038/s41587-020-0439-x).
+
+## Chemprot Post-Quantification Analysis
+
+This fork extends `bigbio/quantms` with **chemoproteomics** downstream analysis modules:
+
+| Mode | Description | Required params |
+|------|-------------|-----------------|
+| `tpp` | Thermal Proteome Profiling — sigmoid melting curve fitting, Tm, ΔTm | `--tpp_temperatures` |
+| `dose_response` | Dose-response — EC50/IC50, Hill slope via 4-PLL | `--compound_conc` |
+| `abpp` | Activity-Based Protein Profiling — limma moderated t-test | `--abpp_condition_col` |
+
+### Usage
+```bash
+nextflow run crisprking/nf-core-chemprot \
+    --input samplesheet.csv \
+    --outdir results \
+    --chemprot_analysis \
+    --analysis_type tpp \
+    --tpp_temperatures "37,45,52,58,61,64"
+```
+
+Chemprot consumes the **MSstats input** (`ch_msstats_in`) produced by the TMT/LFQ/DIA branches of quantms.
+
